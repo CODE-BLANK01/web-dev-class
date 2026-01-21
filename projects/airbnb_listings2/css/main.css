@@ -1,0 +1,26 @@
+/* Fix: was #lintings (typo) in your file */
+#listings .listing img.listing-thumb {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.host-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.amenity-badge {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.price {
+  font-size: 1rem;
+}
+
+.rating-badge {
+  font-weight: 700;
+}
