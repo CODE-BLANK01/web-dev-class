@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- SEO essentials -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Vanilla HTML + CSS + JS Practice Page</title>
+  <meta name="description" content="Practice page for vanilla HTML, CSS box model, positioning, and basic JavaScript interactions." />
+  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="https://example.com/your-page" />
+
+  <!-- Social preview (SEO-adjacent: improves sharing previews) -->
+  <meta property="og:title" content="Vanilla HTML + CSS + JS Practice Page" />
+  <meta property="og:description" content="A simple practice webpage with navbar, sections, box model, positioning, and JS." />
+  <meta property="og:type" content="website" />
+
+  <!-- Optional: helps brand recognition in tabs -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <style>
+    :root{
+      --bg: #0b1220;
+      --card: rgba(255,255,255,.06);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+      --accent: #72e6ff;
+      --accent2: #9b87ff;
+      --border: rgba(255,255,255,.14);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1200px 800px at 10% 10%, rgba(114,230,255,.18), transparent 60%),
+                  radial-gradient(900px 700px at 90% 20%, rgba(155,135,255,.18), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: sticky; /* (not counted in the 4-positioning demo below; just a practical nav) */
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      background: rgba(11,18,32,.65);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      letter-spacing: .2px;
+      white-space: nowrap;
+    }
+    .brand-badge {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 10px 30px rgba(114,230,255,.18);
+    }
+    .nav-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      font-size: 14px;
+    }
+    .nav-links a:hover {
+      color: var(--text);
+      border-color: var(--border);
+      background: rgba(255,255,255,.04);
+    }
+    .nav-links a.active {
+      color: var(--text);
+      border-color: rgba(114,230,255,.35);
+      background: rgba(114,230,255,.12);
+    }
+
+    /* Layout */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 16px 90px; /* extra bottom space so fixed footer doesn't cover content */
+    }
+
+    header.hero {
+      padding: 18px 0 10px;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 4vw, 44px);
+      margin: 0 0 8px;
+      letter-spacing: -0.5px;
+    }
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 75ch;
+    }
+
+    section {
+      margin-top: 28px;
+      padding: 18px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.20);
+    }
+    section h2 {
+      margin: 0 0 8px;
+      font-size: 22px;
+    }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 860px) {
+      .two-col { grid-template-columns: 1fr; }
+    }
+
+    /* Box Model Gallery */
+    .bm-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 12px;
+    }
+    @media (max-width: 860px) {
+      .bm-grid { grid-template-columns: 1fr; }
+    }
+    .bm-card {
+      background: rgba(255,255,255,.04);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .bm-card header {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      font-weight: 700;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .bm-demo-wrap{
+      display:flex;
+      gap: 10px;
+      padding: 12px;
+      flex-wrap: wrap;
+    }
+    .bm-box {
+      min-width: 120px;
+      flex: 1;
+      border-radius: 12px;
+      background: rgba(11,18,32,.55);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .bm-inner {
+      background: rgba(114,230,255,.10);
+      border-radius: 8px;
+      padding: 10px;
+      color: var(--text);
+      border: 1px dashed rgba(114,230,255,.35);
+    }
+
+    /* Creative Positioning Demo */
+    .pos-stage {
+      position: relative; /* container for absolute */
+      height: 200px;
+      border-radius: 16px;
+      border: 1px dashed rgba(255,255,255,.22);
+      background: rgba(255,255,255,.03);
+      margin-top: 12px;
+      overflow: hidden;
+    }
+    .pos-chip {
+      display: inline-block;
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      color: var(--muted);
+      margin: 10px;
+    }
+
+    /* 1) STATIC (default) */
+    .chip-static { position: static; }
+
+    /* 2) RELATIVE */
+    .chip-relative { position: relative; top: 14px; left: 8px; border-color: rgba(155,135,255,.35); }
+
+    /* 3) ABSOLUTE (anchored to .pos-stage because it is position:relative) */
+    .chip-absolute { position: absolute; right: 12px; top: 12px; border-color: rgba(114,230,255,.35); }
+
+    /* 4) FIXED used for footer to stay at bottom */
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: 30;
+      background: rgba(11,18,32,.85);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border);
+    }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .kbd {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      padding: 2px 6px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      color: var(--text);
+    }
+
+    /* Small JS-driven “scroll to top” button */
+    .to-top {
+      position: fixed;
+      right: 16px;
+      bottom: 70px; /* above footer */
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      cursor: pointer;
+      display: none;
+    }
+    .to-top:hover { background: rgba(255,255,255,.10); }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="nav-inner">
+      <div class="brand">
+        <div class="brand-badge" aria-hidden="true"></div>
+        <span>Vanilla Web Practice</span>
+      </div>
+      <div class="nav-links" id="navLinks">
+        <a href="#section1">HTML tags</a>
+        <a href="#section2">SEO head tags</a>
+        <a href="#section3">No-CSS 3×3 grid</a>
+        <a href="#section4">CSS + Positioning</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- MAIN HEADER -->
+    <header class="hero">
+      <h1>HTML + CSS + JS Self-Assessment Page</h1>
+      <p>
+        This page is built with vanilla HTML/CSS/JS. It includes semantic structure, SEO head tags,
+        a no-CSS 3×3 grid, a box-model gallery, inline font-size examples, and a positioning demo.
+      </p>
+    </header>
+
+    <!-- 4 SUBHEADERS/SECTIONS -->
+    <section id="section1">
+      <h2>1) 10 most useful HTML tags (and why)</h2>
+      <div class="two-col">
+        <div>
+          <ol>
+            <li><strong>&lt;div&gt;</strong> — generic container for grouping layout/content.</li>
+            <li><strong>&lt;span&gt;</strong> — inline wrapper for styling small text parts.</li>
+            <li><strong>&lt;header&gt;</strong> — top area of a page/section (semantic).</li>
+            <li><strong>&lt;nav&gt;</strong> — navigation links (semantic + accessibility).</li>
+            <li><strong>&lt;main&gt;</strong> — main content (improves structure).</li>
+            <li><strong>&lt;section&gt;</strong> — groups related content in sections.</li>
+            <li><strong>&lt;article&gt;</strong> — standalone content like a blog post.</li>
+            <li><strong>&lt;h1..h6&gt;</strong> — headings; important for structure + SEO.</li>
+            <li><strong>&lt;a&gt;</strong> — links (navigation + citations).</li>
+            <li><strong>&lt;img&gt;</strong> — images; use <code>alt</code> for accessibility/SEO.</li>
+          </ol>
+        </div>
+        <div>
+          <p style="margin-top:0;color:var(--muted)">
+            Example: A blog post page is often
+            <span class="kbd">&lt;header&gt;</span> for the top bar,
+            <span class="kbd">&lt;main&gt;</span> for the post,
+            <span class="kbd">&lt;article&gt;</span> for the post content,
+            <span class="kbd">&lt;section&gt;</span> for related posts,
+            and <span class="kbd">&lt;footer&gt;</span> for credits/links.
+          </p>
+          <p style="color:var(--muted)">
+            Tip: Prefer semantic tags (<span class="kbd">header/nav/main/section/article/footer</span>)
+            because they help screen readers, search engines, and future you.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="section2">
+      <h2>2) SEO: important “head” tags you should add</h2>
+      <p style="color:var(--muted);margin-top:0">
+        SEO is mostly about: (1) crawlability, (2) clear meaning of content, (3) good metadata for previews,
+        and (4) performance + UX. These tags help search engines understand and display your page better.
+      </p>
+
+      <ul>
+        <li><strong>&lt;title&gt;</strong> — appears in search results tab/title; keep it unique.</li>
+        <li><strong>&lt;meta name="description"&gt;</strong> — influences the search snippet text.</li>
+        <li><strong>&lt;meta charset="utf-8"&gt;</strong> — proper character encoding.</li>
+        <li><strong>&lt;meta name="viewport"&gt;</strong> — required for mobile-friendly pages.</li>
+        <li><strong>&lt;link rel="canonical"&gt;</strong> — avoids duplicate-content confusion.</li>
+        <li><strong>&lt;meta name="robots"&gt;</strong> — tells bots index/follow rules.</li>
+        <li><strong>Open Graph tags</strong> (og:title/og:description/og:image) — better link previews on social.</li>
+        <li><strong>Structured data</strong> (JSON-LD script) — helps rich results (optional but powerful).</li>
+      </ul>
+
+      <p style="color:var(--muted)">
+        Also, inside the <em>body</em>, your heading order matters:
+        Use one clear <span class="kbd">&lt;h1&gt;</span> per page, then <span class="kbd">&lt;h2&gt;</span> for sections,
+        then <span class="kbd">&lt;h3&gt;</span> for subsections. That hierarchy helps both humans and crawlers.
+      </p>
+    </section>
+
+    <section id="section3">
+      <h2>3) 3×3 “grid” layout with NO table + NO CSS (only divs/spans)</h2>
+      <p style="color:var(--muted);margin-top:0">
+        Since we can’t use CSS, we’ll rely on normal inline flow + line breaks. Each row is a <span class="kbd">&lt;div&gt;</span>
+        containing 3 <span class="kbd">&lt;span&gt;</span> cells separated by spaces. This is not “responsive grid CSS”,
+        but it satisfies the requirement: 3×3 layout using only divs/spans and no CSS.
+      </p>
+
+      <!-- NO CSS USED BELOW (no class, no style attribute) -->
+      <div>
+        <div>
+          <span>[1,1]</span> <span>[1,2]</span> <span>[1,3]</span>
+        </div>
+        <div>
+          <span>[2,1]</span> <span>[2,2]</span> <span>[2,3]</span>
+        </div>
+        <div>
+          <span>[3,1]</span> <span>[3,2]</span> <span>[3,3]</span>
+        </div>
+      </div>
+      <!-- END NO CSS AREA -->
+    </section>
+
+    <section id="section4">
+      <h2>4) CSS Box Model Gallery + Inline Font Sizes + Positioning Demo</h2>
+
+      <h3 style="margin-bottom:6px;">4A) Box Model “gallery” (rows change border/margin/padding; columns 0/5/10px)</h3>
+      <p style="color:var(--muted);margin-top:0">
+        Each row below changes <strong>border</strong>, <strong>margin</strong>, and <strong>padding</strong>.
+        Inside each row, the three columns show values <span class="kbd">0px</span>, <span class="kbd">5px</span>, <span class="kbd">10px</span>.
+      </p>
+
+      <div class="bm-grid">
+        <!-- Row 1 -->
+        <div class="bm-card">
+          <header>Row 1: border 1px, margin varies, padding varies</header>
+          <div class="bm-demo-wrap">
+            <div class="bm-box" style="margin:0; border:1px solid rgba(255,255,255,.22); padding:0;">
+              <div class="bm-inner">0px</div>
+              <div style="padding:10px 10px 12px;">margin:0, padding:0</div>
+            </div>
+            <div class="bm-box" style="margin:5px; border:1px solid rgba(255,255,255,.22); padding:5px;">
+              <div class="bm-inner">5px</div>
+              <div style="padding:10px 10px 12px;">margin:5, padding:5</div>
+            </div>
+            <div class="bm-box" style="margin:10px; border:1px solid rgba(255,255,255,.22); padding:10px;">
+              <div class="bm-inner">10px</div>
+              <div style="padding:10px 10px 12px;">margin:10, padding:10</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="bm-card">
+          <header>Row 2: border 4px, margin varies, padding varies</header>
+          <div class="bm-demo-wrap">
+            <div class="bm-box" style="margin:0; border:4px solid rgba(114,230,255,.25); padding:0;">
+              <div class="bm-inner">0px</div>
+              <div style="padding:10px 10px 12px;">border:4px</div>
+            </div>
+            <div class="bm-box" style="margin:5px; border:4px solid rgba(114,230,255,.25); padding:5px;">
+              <div class="bm-inner">5px</div>
+              <div style="padding:10px 10px 12px;">border:4px</div>
+            </div>
+            <div class="bm-box" style="margin:10px; border:4px solid rgba(114,230,255,.25); padding:10px;">
+              <div class="bm-inner">10px</div>
+              <div style="padding:10px 10px 12px;">border:4px</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 3 -->
+        <div class="bm-card">
+          <header>Row 3: border 2px dashed, margin varies, padding varies</header>
+          <div class="bm-demo-wrap">
+            <div class="bm-box" style="margin:0; border:2px dashed rgba(155,135,255,.35); padding:0;">
+              <div class="bm-inner">0px</div>
+              <div style="padding:10px 10px 12px;">dashed border</div>
+            </div>
+            <div class="bm-box" style="margin:5px; border:2px dashed rgba(155,135,255,.35); padding:5px;">
+              <div class="bm-inner">5px</div>
+              <div style="padding:10px 10px 12px;">dashed border</div>
+            </div>
+            <div class="bm-box" style="margin:10px; border:2px dashed rgba(155,135,255,.35); padding:10px;">
+              <div class="bm-inner">10px</div>
+              <div style="padding:10px 10px 12px;">dashed border</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr style="border:0;border-top:1px solid rgba(255,255,255,.10);margin:18px 0;">
+
+      <h3 style="margin-bottom:6px;">4B) Itemized list: same text, 6 font sizes (inline styling)</h3>
+      <p style="color:var(--muted);margin-top:0">
+        Same text, different units. Each item explains when you’d use that unit with an example.
+      </p>
+
+      <ul>
+        <li style="font-size:12px;">
+          Same text — <strong>12px</strong> (absolute): use for pixel-perfect UI controls (e.g., tiny labels in a dashboard).
+        </li>
+        <li style="font-size:16px;">
+          Same text — <strong>16px</strong> (absolute): common base size; use when a design system specifies exact pixels.
+        </li>
+        <li style="font-size:1em;">
+          Same text — <strong>1em</strong> (relative to parent): use inside components so text scales if the component’s base size changes.
+        </li>
+        <li style="font-size:1.25rem;">
+          Same text — <strong>1.25rem</strong> (relative to root): use for consistent typography scale across the whole site (headings/buttons).
+        </li>
+        <li style="font-size:120%;">
+          Same text — <strong>120%</strong> (relative): use when you want proportional sizing based on inherited size (e.g., make a callout slightly larger).
+        </li>
+        <li style="font-size:3vw;">
+          Same text — <strong>3vw</strong> (viewport-based): use for responsive hero text that scales with screen width (careful: can get too small on phones).
+        </li>
+      </ul>
+
+      <hr style="border:0;border-top:1px solid rgba(255,255,255,.10);margin:18px 0;">
+
+      <h3 style="margin-bottom:6px;">4C) Creative part: 4 positioning options + footer stays at bottom</h3>
+      <p style="color:var(--muted);margin-top:0">
+        Below demonstrates <strong>static</strong>, <strong>relative</strong>, <strong>absolute</strong>, and <strong>fixed</strong>.
+        The <strong>footer uses fixed</strong> so it stays on the bottom of the screen.
+      </p>
+
+      <div class="pos-stage">
+        <span class="pos-chip chip-static">
+          Static: default flow (use for normal document layout)
+        </span>
+
+        <span class="pos-chip chip-relative">
+          Relative: “nudge” an element without removing it from flow (e.g., badge offset on a card)
+        </span>
+
+        <span class="pos-chip chip-absolute">
+          Absolute: pinned inside a positioned container (e.g., “NEW” label on top-right of a product card)
+        </span>
+
+        <span class="pos-chip" style="position: static; display:block; margin-top: 70px; color: var(--muted);">
+          Fixed (used by footer): stays on screen even when you scroll (e.g., chat widget, sticky action bar).
+        </span>
+      </div>
+    </section>
+  </main>
+
+  <button class="to-top" id="toTopBtn" aria-label="Scroll to top">↑ Top</button>
+
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <strong style="color:var(--text)">Footer (position: fixed)</strong>
+        <span style="color:var(--muted)">— stays at the bottom of the screen.</span>
+      </div>
+      <div>
+        JS tips: press <span class="kbd">T</span> for top • navbar highlights active section
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Smooth-scroll + active-link highlight (vanilla JS)
+    const nav = document.getElementById("navLinks");
+    const links = Array.from(nav.querySelectorAll("a"));
+    const sections = links
+      .map(a => document.querySelector(a.getAttribute("href")))
+      .filter(Boolean);
+
+    // On click: smooth scroll (extra-safe for older browsers)
+    links.forEach(a => {
+      a.addEventListener("click", (e) => {
+        e.preventDefault();
+        const target = document.querySelector(a.getAttribute("href"));
+        if (!target) return;
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    function setActiveLink() {
+      const y = window.scrollY + 120; // offset for sticky nav
+      let activeIndex = 0;
+
+      sections.forEach((sec, i) => {
+        if (sec.offsetTop <= y) activeIndex = i;
+      });
+
+      links.forEach((a, i) => {
+        a.classList.toggle("active", i === activeIndex);
+      });
+    }
+
+    window.addEventListener("scroll", setActiveLink);
+    window.addEventListener("load", setActiveLink);
+
+    // "Back to top" button + keyboard shortcut
+    const toTopBtn = document.getElementById("toTopBtn");
+    function toggleTopBtn(){
+      toTopBtn.style.display = window.scrollY > 500 ? "block" : "none";
+    }
+    window.addEventListener("scroll", toggleTopBtn);
+    window.addEventListener("load", toggleTopBtn);
+
+    toTopBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key.toLowerCase() === "t") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    });
+  </script>
+</body>
+</html>
